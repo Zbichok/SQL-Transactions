@@ -124,4 +124,30 @@ values (1, 201, 'Mari Maasikas', 500.00);
 insert into tblHoiusarve
 VALUES (1, 201, 'Mari Maasikas', 1000.00);
 
+go
+
 create procedure spUlekanne
+as
+begin
+    begin try
+        begin transaction;
+
+        update tblHoiusarve
+        set Saldo = Saldo + 200
+        where KliendiNr = 201;
+
+        update tblArveldusarve
+        set Saldo = Saldo - 200
+        where KliendiNr = 201;
+
+        commit transaction;
+    end try
+
+    begin catch
+        rollback transaction;
+    end catch
+end;
+
+exec spUlekanne;
+select * from tblArveldusarve;
+select * from tblHoiusarve;
