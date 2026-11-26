@@ -1,0 +1,127 @@
+create database TimohaTrans;
+use TimohaTrans;
+
+create table tblMailingAddress (
+AddressId INT NOT NULL PRIMARY KEY,
+EmployeeNumber int,
+HouseNumber nvarchar(50),
+StreetAddress nvarchar(50),
+City nvarchar(10),
+PostalCode nvarchar(50)
+);
+
+create table tblPhysicalAddress (
+AddressId INT NOT NULL PRIMARY KEY,
+EmployeeNumber int,
+HouseNumber nvarchar(50),
+StreetAddress nvarchar(50),
+City nvarchar(10),
+PostalCode nvarchar(50)
+);
+
+select * from tblMailingAddress;
+select * from tblPhysicalAddress;
+
+INSERT INTO tblMailingAddress
+    (AddressId, EmployeeNumber, HouseNumber, StreetAddress, City, PostalCode)
+VALUES
+    (1, 101, '#10', 'King Street', 'Londoon', 'CR27DW');
+
+INSERT INTO tblPhysicalAddress
+    (AddressId, EmployeeNumber, HouseNumber, StreetAddress, City, PostalCode)
+VALUES
+    (1, 101, '#10', 'King Street', 'Londoon', 'CR27DW');
+
+go
+
+create procedure spUpdateAddress
+as
+begin
+    begin try
+        begin transaction;
+
+        UPDATE tblMailingAddress
+        Set City = 'LONDON'
+        where EmployeeNumber = 101;
+
+        update tblPhysicalAddress
+        set City = 'LONDON'
+        where EmployeeNumber = 101;
+
+        commit transaction;
+    end try
+
+    begin catch
+        Rollback transaction;
+    end catch
+end;
+
+exec spUpdateAddress;
+
+select * from tblMailingAddress;
+select * from tblPhysicalAddress;
+
+go
+
+alter procedure spUpdateAddress
+as
+begin
+    begin try
+        begin transaction;
+
+        update tblMailingAddress
+        set City = 'LONDON12'
+        where EmployeeNumber = 101;
+
+        update tblPhysicalAddress
+        set City = 'LONDON LONDON'
+        where EmployeeNumber = 101;
+
+        commit transaction;
+    end try
+
+    begin catch
+        rollback transaction;
+    end catch
+end;
+
+exec spUpdateAddress
+
+select * from tblMailingAddress;
+select * from tblPhysicalAddress;
+
+update tblMailingAddress
+set City = 'LONDON12'
+where EmployeeNumber = 101;
+
+update tblPhysicalAddress
+set City = 'LONDON LONDON'
+where EmployeeNumber = 101;
+
+select * from tblMailingAddress;
+select * from tblPhysicalAddress;
+
+create table tblArveldusarve (
+    KontoId INT NOT NULL PRIMARY KEY,
+    KliendiNr INT,
+    Omanik NVARCHAR(30),
+    Saldo DECIMAL(10,2) CHECK (Saldo >= 0)
+);
+
+create table tblHoiusarve (
+    KontoId INT NOT NULL PRIMARY KEY,
+    KliendiNr INT,
+    Omanik NVARCHAR(30),
+    Saldo DECIMAL(10,2) CHECK (Saldo >= 0)
+);
+
+select * from tblArveldusarve
+select * from tblHoiusarve
+
+insert into tblArveldusarve
+values (1, 201, 'Mari Maasikas', 500.00);
+
+insert into tblHoiusarve
+VALUES (1, 201, 'Mari Maasikas', 1000.00);
+
+create procedure spUlekanne
